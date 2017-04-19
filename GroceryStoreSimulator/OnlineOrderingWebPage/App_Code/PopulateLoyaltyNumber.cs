@@ -27,7 +27,7 @@ public class PopulateLoyaltyNumber {
         
         }
     // creating a method to populate ddlLoyaltyNumbers
-    public DropDownList GetLoyaltyNumbers(DropDownList ddlLoyaltyNumbers) {
+    public void GetLoyaltyNumbers(DropDownList ddlLoyaltyNumbers) {
         ListItem loyaltyItem;
         comm = new SqlCommand("SELECT LoyaltyID, LoyaltyNumber FROM dbo.tLoyalty", conn);
 
