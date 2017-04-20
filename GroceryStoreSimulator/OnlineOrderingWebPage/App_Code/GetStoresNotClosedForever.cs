@@ -1,29 +1,33 @@
-﻿/* Richard McDonald & Daniel Kroeger
- * creating a file to generate and populate a DropDownList with Loyalty Numbers
+﻿/*********************************************************
+Web Server App Dev
+4/19/2017
+Tom Martin
+Jeff Downs
 
+Group Assignment
+Get Stores that are not closed forever
+**********************************************************/
 
-
-*/
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
-using System.Web.UI;
 using System.Web.UI.WebControls;
 
 /// <summary>
-/// Summary description for PopulateLoyaltyNumber
+/// Summary description for GetStoresNotClosedForever
 /// </summary>
-/// 
-// create a sqlDataReader, sqlConnection, and sqlCommand
-public class PopulateLoyaltyNumber {
+public class GetStoresNotClosedForever {
+
+
+    public GetStoresNotClosedForever() {
+    }
+
     private static SqlDataReader reader;
     SqlCommand comm;
     private static SqlConnection conn;
-        
+
 
     private void OpenConnection() {
         //creates a configuration setting object for the connection string
@@ -33,17 +37,14 @@ public class PopulateLoyaltyNumber {
 
         //initializes the connection object with the value of our connection string
         conn = new System.Data.SqlClient.SqlConnection(strConn.ConnectionString);
-
-
         // This could go wrong in so many ways...
         try {
             conn.Open();
-            }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             // Miserable error handling...
             Console.Write(ex.Message);
-            }
         }
+    }
 
     /**
      * Returns a settings object that holds the connection string for the database
@@ -61,41 +62,38 @@ public class PopulateLoyaltyNumber {
         //if the connection string is present, sets the object to equal the connection string in the web.config file
         if (rootWebConfig.ConnectionStrings.ConnectionStrings.Count > 0) {
             connString = rootWebConfig.ConnectionStrings.ConnectionStrings["GroceryStoreSimulator"];
-            }
+        }
 
         //returns our connection string settings object
         return connString;
-        }
+    }
 
 
-    int loyaltyID;
-    string loyaltyNumber;
-    public PopulateLoyaltyNumber() {
-        
-        }
-    // creating a method to populate ddlLoyaltyNumbers
-    public void GetLoyaltyNumbers(DropDownList ddlLoyaltyNumbers) {
+
+
+    public void GetAllStoresNotClosedForever(DropDownList ddlLoyaltyNumbers) {
+    int storeID;
+    string storeName;
         // open the connection
         OpenConnection();
-        ListItem loyaltyItem;
-        comm = new SqlCommand("SELECT LoyaltyID, LoyaltyNumber FROM dbo.tLoyalty", conn);
+        //a variable to hold stores
+        ListItem store;
+        comm = new SqlCommand(@"SELECT tStore.StoreID, tStore.Store, tStoreStatus.IsClosedForever
+                               FROM tStore INNER JOIN tStoreHistory ON tStore.StoreID = tStoreHistory.StoreID INNER JOIN
+                                tStoreStatus ON tStoreHistory.StoreStatusID = tStoreStatus.StoreStatusID", conn);
 
-        try { reader.Close(); } catch(Exception ex) { }
-        // use the reader object to execute the query 
+        try { reader.Close(); } catch (Exception ex) { }
         reader = comm.ExecuteReader();
-        
-        //iterate through the dataset line by line
         while (reader.Read()) {
-
-            // stores the primary key of the LoyaltyNumber
-            loyaltyID = reader.GetInt32(0);
-            // stores the loyaltyNumber
-            loyaltyNumber = reader.GetString(1);
-            // create list item with the text and value of the store
-            loyaltyItem = new ListItem(loyaltyNumber, loyaltyID.ToString());
-            // add the item to the dropDownList
-            ddlLoyaltyNumbers.Items.Add(loyaltyItem);
-            }
-
+            //holds the primary key of stores from query         
+            storeID = reader.GetInt32(0);
+            //hold the store name
+            storeName = reader.GetString(1);
+            //list to hold the stores 
+            store = new ListItem(storeName, storeID.ToString());
+            //adds items to the drop down list
+            ddlLoyaltyNumbers.Items.Add(store);
         }
+
     }
+}
