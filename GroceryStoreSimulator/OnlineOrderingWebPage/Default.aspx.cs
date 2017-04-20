@@ -9,6 +9,9 @@ public partial class _Default : System.Web.UI.Page {
     protected void Page_Load(object sender, EventArgs e) {
         PopulateLoyaltyNumber loyalty = new PopulateLoyaltyNumber();
         loyalty.GetLoyaltyNumbers(ddlLoyaltyNumbers);
+
+        GetStoresNotClosedForever getStores = new GetStoresNotClosedForever();
+        getStores.GetAllStoresNotClosedForever(ddlStores);
     }
 
 }

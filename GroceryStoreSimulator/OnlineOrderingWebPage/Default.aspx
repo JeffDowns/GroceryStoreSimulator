@@ -11,6 +11,7 @@
     <div>
         <asp:Image ID="imgGroceries" runat="server" ImageUrl="~/App_Themes/DefaultTheme/Groceries.bmp" />
         <asp:DropDownList ID="ddlLoyaltyNumbers" runat="server"></asp:DropDownList>
+        <asp:DropDownList ID="ddlStores" runat="server" AutoPostBack="true"></asp:DropDownList>
     </div>
     </form>
 </body>
